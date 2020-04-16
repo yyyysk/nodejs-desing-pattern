@@ -10,12 +10,11 @@ class ToFileStream extends stream.Writable {
 
   _write(chunk, encoding, callback) {
     console.log('path', path.dirname(chunk.path));
-    mkdirp(path.dirname(chunk.path), err => {
-      if (err) {
-        return callback(err);
-      }
-      fs.writeFile(chunk.path, chunk.content, callback);
-    });
+    mkdirp(path.dirname(chunk.path))
+      .then(() => {
+        fs.writeFile(chunk.path, chunk.content, callback);
+      })
+      .catch(err => callback(err));
   }
 }
 
